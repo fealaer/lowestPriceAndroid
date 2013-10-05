@@ -2,14 +2,18 @@ package com.lowestprice.activity;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -21,13 +25,14 @@ import com.lowestprice.db.ProductPriceOpenHelper;
 import com.lowestprice.db.SessionOpenHelper;
 
 import java.util.Date;
-import java.util.List;
 
-public class ProductScannerActivity extends Activity implements View.OnClickListener {
+public class ProductScannerActivity extends ActionBarActivity implements View
+    .OnClickListener {
 
-    private EditText barcodeEtxt, productNameEtxt, priceEtxt, quantityEtxt,
+    private EditText barcodeEtxt, productNameEtxt, quantityEtxt,
         barcodeTypeEtxt, productTypeEtxt;
-    private Button scanBtn, addBtn, resetBtn, saveBtn;
+    private ImageButton scanBtn;
+    private Button addBtn;
     private Session session;
 
     /**
@@ -37,24 +42,37 @@ public class ProductScannerActivity extends Activity implements View.OnClickList
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.scan);
+        setContentView(R.layout.product);
 
-        scanBtn = (Button) findViewById(R.id.scanButton);
-        addBtn = (Button) findViewById(R.id.addButton);
-        resetBtn = (Button) findViewById(R.id.resetButton);
-        saveBtn = (Button) findViewById(R.id.saveButton);
+        scanBtn = (ImageButton) findViewById(R.id.scanBarcodeButton);
+        addBtn = (Button) findViewById(R.id.addToCartButton);
 
         barcodeEtxt = (EditText) findViewById(R.id.barcode);
         barcodeTypeEtxt = (EditText) findViewById(R.id.barcodeType);
         productNameEtxt = (EditText) findViewById(R.id.productName);
         productTypeEtxt = (EditText) findViewById(R.id.productType);
-        priceEtxt = (EditText) findViewById(R.id.price);
         quantityEtxt = (EditText) findViewById(R.id.quantity);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String searchRequest = extras.getString(MainActivity.SEARCH_REQUEST);
+            String barcodeContent = extras.getString(MainActivity.BARCODE_CONTENT);
+            String barcodeType = extras.getString(MainActivity.BARCODE_TYPE);
+
+            if (searchRequest != null && !searchRequest.isEmpty()) {
+                if (Character.isLetter(searchRequest.charAt(0))) {
+                    productNameEtxt.setText(searchRequest);
+                } else {
+                    barcodeEtxt.setText(searchRequest);
+                }
+            } else if (barcodeContent != null && !barcodeContent.isEmpty()) {
+                barcodeEtxt.setText(barcodeContent);
+                barcodeTypeEtxt.setText(barcodeType);
+            }
+        }
 
         scanBtn.setOnClickListener(this);
         addBtn.setOnClickListener(this);
-        resetBtn.setOnClickListener(this);
-        saveBtn.setOnClickListener(this);
 
         long time = new Date().getTime();
         Location location = new LocationHelper(this).getLocation();
@@ -63,6 +81,9 @@ public class ProductScannerActivity extends Activity implements View.OnClickList
                 "Location isn't available!", Toast.LENGTH_SHORT).show();
         }
         session = new Session(time, getUserName(), location, null);
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
     }
 
     @Override
@@ -84,16 +105,23 @@ public class ProductScannerActivity extends Activity implements View.OnClickList
                 barcodeTypeEtxt.getText().toString(),
                 productNameEtxt.getText().toString(),
                 productTypeEtxt.getText().toString(),
-                Double.valueOf(priceEtxt.getText().toString()),
+                32.23,
                 Integer.valueOf(quantityEtxt.getText().toString()),
                 session.getDate()
             );
             SQLiteDatabase prodDB = prodHelper.getWritableDatabase();
-            prodHelper.save(prodDB, productPrice);
-            List<ProductPrice> all = prodHelper.getAll(prodDB);
-            Toast.makeText(getApplicationContext(),
-                            "Product barcode is " + all.get(0).getBarcode(),Toast.LENGTH_SHORT).show();
+            if (prodHelper.save(prodDB, productPrice) > 0) {
+                String product = productNameEtxt.getText().toString() != null ?
+                    "name is " + productNameEtxt.getText().toString() :
+                    "barcode is " + barcodeEtxt.getText().toString();
+                Toast.makeText(getApplicationContext(),
+                    "Product " + product, Toast.LENGTH_SHORT).show();
+            }
             prodDB.close();
+
+
+            Intent intent = new Intent(this, CartListActivity.class);
+            startActivity(intent);
         } else {
             Toast.makeText(getApplicationContext(),
                 "Not implemented yet!", Toast.LENGTH_SHORT).show();
@@ -114,7 +142,14 @@ public class ProductScannerActivity extends Activity implements View.OnClickList
             barcodeEtxt.setText(scanningResult.getContents());
         } else {
             Toast.makeText(getApplicationContext(),
-                "No scan data received!", Toast.LENGTH_SHORT).show();
+                "No product data received!", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 }

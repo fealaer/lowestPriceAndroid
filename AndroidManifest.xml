@@ -3,20 +3,32 @@
           package="com.lowestprice"
           android:versionCode="1"
           android:versionName="1.0">
-    <uses-sdk android:minSdkVersion="14"/>
+    <uses-sdk android:minSdkVersion="13"
+              android:targetSdkVersion="18"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.READ_CONTACTS"/>
     <application android:label="@string/app_name"
-                 android:icon="@drawable/ic_launcher">
+                 android:icon="@drawable/ic_tag_white_barcode"
+                 android:theme="@style/Theme.AppCompat">
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ProductScannerActivity"/>
+        <activity android:name=".activity.ProductScannerActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity"/>
+        </activity>
+        <activity android:name=".activity.CartListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity"/>
+        </activity>
     </application>
 </manifest>

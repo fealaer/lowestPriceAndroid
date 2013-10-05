@@ -17,7 +17,7 @@
 package com.google.zxing.integration.android;
 
 /**
- * <p>Encapsulates the result of a barcode scan invoked through {@link IntentIntegrator}.</p>
+ * <p>Encapsulates the result of a barcode product invoked through {@link IntentIntegrator}.</p>
  *
  * @author Sean Owen
  */
@@ -67,7 +67,7 @@ public final class IntentResult {
     }
 
     /**
-     * @return rotation of the image, in degrees, which resulted in a successful scan. May be null.
+     * @return rotation of the image, in degrees, which resulted in a successful product. May be null.
      */
     public Integer getOrientation() {
         return orientation;

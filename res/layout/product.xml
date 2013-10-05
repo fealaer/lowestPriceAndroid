@@ -20,15 +20,18 @@
             android:cursorVisible="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:layout_weight="0.7"
-            android:ems="10"/>
+            android:layout_weight="0.95"
+            android:ems="13"/>
 
-        <Button
-            android:id="@+id/scanButton"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:text="@string/scan"
-            android:layout_weight="0.3"/>
+        <ImageButton
+                android:id="@+id/scanBarcodeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.05"
+                android:text="@string/scanBarcode"
+                android:src="@drawable/ic_barcode"
+                android:contentDescription="@string/scanBarcode"
+                />
 
     </LinearLayout>
 
@@ -36,50 +39,21 @@
         android:id="@+id/productName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
+        android:ems="13"
         android:hint="@string/productName"
         android:inputType="text"
         android:layout_below="@id/barcodeWrapper"/>
-
-    <EditText
-        android:id="@+id/price"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:hint="@string/price"
-        android:inputType="numberDecimal"
-        android:maxLength="20"
-        android:layout_below="@id/productName"/>
 
     <EditText
         android:id="@+id/quantity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:ems="10"
+        android:ems="13"
         android:hint="@string/quantity"
         android:inputType="number"
         android:maxLength="10"
-        android:layout_below="@id/price"/>
-
-    <EditText
-        android:id="@+id/barcodeType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:inputType="text"
-        android:visibility="invisible"/>
-
-    <EditText
-        android:id="@+id/productType"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:ems="10"
-        android:inputType="text"
-        android:visibility="invisible"/>
+        android:layout_below="@id/productName"/>
 
     <LinearLayout
         android:id="@+id/buttonsWrapper"
@@ -89,26 +63,31 @@
         android:layout_below="@+id/quantity">
 
         <Button
-            android:id="@+id/addButton"
+            android:id="@+id/addToCartButton"
             android:layout_width="0.0dip"
             android:layout_height="fill_parent"
-            android:text="@string/add"
-            android:layout_weight="1.0"/>
-
-        <Button
-            android:id="@+id/resetButton"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:text="@string/reset"
-            android:layout_weight="1.0"/>
-
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:text="@string/save"
+            android:drawableLeft="@drawable/ic_shop_cart"
+            android:text="@string/addToCart"
             android:layout_weight="1.0"/>
 
     </LinearLayout>
+
+    <EditText
+        android:id="@+id/barcodeType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="13"
+        android:inputType="text"
+        android:visibility="invisible"/>
+
+    <EditText
+        android:id="@+id/productType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:ems="13"
+        android:inputType="text"
+        android:visibility="invisible"/>
 
 </RelativeLayout>

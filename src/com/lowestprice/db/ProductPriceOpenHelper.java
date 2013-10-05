@@ -43,8 +43,8 @@ public class ProductPriceOpenHelper extends SQLiteOpenHelper implements LowestPr
         onCreate(db);
     }
 
-    public void save(SQLiteDatabase db, ProductPrice product) {
-        db.insert(TABLE_NAME, null, product.getContentValues());
+    public long save(SQLiteDatabase db, ProductPrice product) {
+        return db.insert(TABLE_NAME, null, product.getContentValues());
     }
 
     public List<ProductPrice> getAll(SQLiteDatabase db) {

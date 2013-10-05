@@ -1,44 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/barcodeWrapper"
+    android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:layout_centerHorizontal="true">
-    <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
-            android:id="@+id/mainImage"
-            android:layout_gravity="center"
-            android:src="@drawable/zebra"
-            android:contentDescription="@string/mainImage"/>
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    >
 
-    <LinearLayout
-        android:orientation="horizontal"
-        android:background="@android:drawable/bottom_bar"
-        android:paddingLeft="4.0dip"
-        android:paddingTop="5.0dip"
-        android:paddingRight="4.0dip"
-        android:paddingBottom="1.0dip"
-        android:layout_width="fill_parent"
+    <ImageButton
+        android:id="@+id/scanBarcodeButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/mainImage"
-        >
+        android:layout_weight="0.2"
+        android:text="@string/scanBarcode"
+        android:src="@drawable/ic_barcode"
+        android:contentDescription="@string/scanBarcode"
+        />
 
-        <Button
-            android:id="@+id/findPrice"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:text="@string/findPrice"
-            android:layout_weight="1.0"/>
+    <EditText
+        android:id="@+id/productNameOrBarcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.6"
+        android:hint="@string/productNameOrBarcode"
+        android:inputType="text"
+        android:maxLength="15"
+        android:ems="13"
+        />
 
-        <Button
-            android:id="@+id/scanBarcode"
-            android:layout_width="0.0dip"
-            android:layout_height="fill_parent"
-            android:text="@string/scanBarcode"
-            android:layout_weight="1.0"/>
+    <ImageButton
+        android:id="@+id/findPriceButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.2"
+        android:text="@string/findPriceButton"
+        android:src="@android:drawable/ic_menu_search"
+        android:contentDescription="@string/findPriceButton"
+        />
 
-    </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

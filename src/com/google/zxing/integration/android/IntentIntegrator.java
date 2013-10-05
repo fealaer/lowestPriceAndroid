@@ -34,7 +34,7 @@ import java.util.*;
  * way to invoke barcode scanning and receive the result, without any need to integrate, modify, or learn the
  * project's source code.</p>
  * <p/>
- * <h2>Initiating a barcode scan</h2>
+ * <h2>Initiating a barcode product</h2>
  * <p/>
  * <p>To integrate, create an instance of {@code IntentIntegrator} and call {@link #initiateScan()} and wait
  * for the result in your app.</p>
@@ -49,16 +49,16 @@ import java.util.*;
  * public void onActivityResult(int requestCode, int resultCode, Intent intent) {
  *   IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
  *   if (scanResult != null) {
- *     // handle scan result
+ *     // handle product result
  *   }
  *   // else continue with any other code you need in the method
  *   ...
  * }
  * }</pre>
  * <p/>
- * <p>This is where you will handle a scan result.</p>
+ * <p>This is where you will handle a product result.</p>
  * <p/>
- * <p>Second, just call this in response to a user action somewhere to begin the scan process:</p>
+ * <p>Second, just call this in response to a user action somewhere to begin the product process:</p>
  * <p/>
  * <pre>{@code
  * IntentIntegrator integrator = new IntentIntegrator(yourActivity);
@@ -92,7 +92,7 @@ import java.util.*;
  * <p/>
  * <p>Some formats are not enabled by default even when scanning with {@link #ALL_CODE_TYPES}, such as
  * PDF417. Use {@link #initiateScan(java.util.Collection)} with
- * a collection containing the names of formats to scan for explicitly, like "PDF_417", to use such
+ * a collection containing the names of formats to product for explicitly, like "PDF_417", to use such
  * formats.</p>
  *
  * @author Sean Owen
@@ -160,7 +160,7 @@ public class IntentIntegrator {
      * {@link Activity#onActivityResult(int, int, Intent)} method.</p>
      *
      * @return null if the event handled here was not related to this class, or
-     *         else an {@link IntentResult} containing the result of the scan. If the user cancelled scanning,
+     *         else an {@link IntentResult} containing the result of the product. If the user cancelled scanning,
      *         the fields will be null.
      */
     public static IntentResult parseActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -259,14 +259,14 @@ public class IntentIntegrator {
     }
 
     /**
-     * Initiates a scan for all known barcode types.
+     * Initiates a product for all known barcode types.
      */
     public final AlertDialog initiateScan() {
         return initiateScan(ALL_CODE_TYPES);
     }
 
     /**
-     * Initiates a scan only for a certain set of barcode types, given as strings corresponding
+     * Initiates a product only for a certain set of barcode types, given as strings corresponding
      * to their names in ZXing's {@code BarcodeFormat} class like "UPC_A". You can supply constants
      * like {@link #PRODUCT_CODE_TYPES} for example.
      *
@@ -277,7 +277,7 @@ public class IntentIntegrator {
         Intent intentScan = new Intent(BS_PACKAGE + ".SCAN");
         intentScan.addCategory(Intent.CATEGORY_DEFAULT);
 
-        // check which types of codes to scan for
+        // check which types of codes to product for
         if (desiredBarcodeFormats != null) {
             // set the desired barcode types
             StringBuilder joinedByComma = new StringBuilder();
@@ -365,7 +365,7 @@ public class IntentIntegrator {
 
     /**
      * Shares the given text by encoding it as a barcode, such that another user can
-     * scan the text off the screen of the device.
+     * product the text off the screen of the device.
      *
      * @param text the text string to encode as a barcode
      * @param type type of data to encode. See {@code com.google.zxing.client.android.Contents.Type} constants.

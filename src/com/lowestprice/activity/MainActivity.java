@@ -1,41 +1,76 @@
 package com.lowestprice.activity;
 
 import android.accounts.*;
-import android.app.Activity;
 import android.content.Intent;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.v7.app.ActionBarActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
-import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.lowestprice.R;
 
 import java.io.IOException;
 
-public class MainActivity extends Activity implements View.OnClickListener {
+public class MainActivity extends ActionBarActivity implements View.OnClickListener {
+    public static final String BARCODE_TYPE = "barcodeType";
+    public static final String SEARCH_REQUEST = "searchRequest";
+    public static final String BARCODE_CONTENT = "barcodeContent";
+    private static final String NO_DATA_MSG = "No product data received!";
 
-    private Button scanBarcodeBtn, findPriceBtn;
+    private ImageButton scanBarcodeBtn, findPriceBtn;
     private Location location;
+    private EditText productNameOrBarcodeEtxt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        findPriceBtn = (Button) findViewById(R.id.findPrice);
-        scanBarcodeBtn = (Button) findViewById(R.id.scanBarcode);
+        findPriceBtn = (ImageButton) findViewById(R.id.findPriceButton);
+        scanBarcodeBtn = (ImageButton) findViewById(R.id.scanBarcodeButton);
+        productNameOrBarcodeEtxt = (EditText) findViewById(R.id.productNameOrBarcode);
+
         findPriceBtn.setOnClickListener(this);
         scanBarcodeBtn.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (view.getId() == R.id.findPrice) {
-            Toast.makeText(getApplicationContext(),
-                "Not implemented yet!", Toast.LENGTH_SHORT).show();
-        } else if (view.getId() == R.id.scanBarcode) {
+        if (view.getId() == findPriceBtn.getId()) {
             Intent intent = new Intent(this, ProductScannerActivity.class);
+            intent.putExtra(SEARCH_REQUEST, productNameOrBarcodeEtxt.getText().toString());
             startActivity(intent);
+        } else if (view.getId() == scanBarcodeBtn.getId()) {
+            IntentIntegrator scanIntegrator = new IntentIntegrator(this);
+            scanIntegrator.initiateScan();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanningResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanningResult != null && scanningResult.getContents() != null) {
+            Intent next = new Intent(this, ProductScannerActivity.class);
+
+            next.putExtra(BARCODE_TYPE, scanningResult.getFormatName());
+            next.putExtra(BARCODE_CONTENT, scanningResult.getContents());
+            startActivity(next);
+        } else {
+            Toast.makeText(getApplicationContext(),
+                NO_DATA_MSG, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     private class OnTokenAcquired implements AccountManagerCallback<Bundle> {
